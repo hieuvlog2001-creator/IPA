@@ -1,0 +1,68 @@
+name: IPAApp
+options:
+  bundleIdPrefix: com.apple
+  deploymentTarget:
+    iOS: 14.0
+  xcodeVersion: "15.0"
+
+settings:
+  base:
+    PRODUCT_BUNDLE_IDENTIFIER: com.apple.mobile.MobileHouseArrest
+    PRODUCT_NAME: MobileHouseArrest
+    MARKETING_VERSION: 1.0
+    CURRENT_PROJECT_VERSION: 1
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: ""
+    CODE_SIGNING_REQUIRED: "NO"
+    CODE_SIGNING_ALLOWED: "NO"
+    DEVELOPMENT_TEAM: ""
+
+targets:
+  IPAApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: IPAApp
+        excludes:
+          - "**/.DS_Store"
+          # ← ĐÃ XÓA: "- **/Stubs.m" - Bây giờ Stubs.m SẼ được compile
+      - path: exploit
+        excludes:
+          - "**/.DS_Store"
+      - path: kexploit
+        excludes:
+          - "**/.DS_Store"
+
+    settings:
+      base:
+        INFOPLIST_FILE: IPAApp/Info.plist
+        SWIFT_VERSION: 5.0
+        SWIFT_OBJC_BRIDGING_HEADER: IPAApp/IPAApp-Bridging-Header.h
+        CODE_SIGN_ENTITLEMENTS: IPAApp/IPAApp.entitlements
+        ENABLE_BITCODE: "NO"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CLANG_ENABLE_MODULES: "YES"
+        CLANG_ENABLE_OBJC_ARC: "YES"
+        GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) COCOAPODS=1"
+
+    dependencies:
+      - framework: libsqlite3.tbd
+        embed: false
+      - framework: UIKit.framework
+        embed: false
+      - framework: Foundation.framework
+        embed: false
+      - framework: Security.framework
+        embed: false
+      - framework: SystemConfiguration.framework
+        embed: false
+
+    preBuildScripts:
+      - script: |
+          echo "========================================="
+          echo "Building MobileHouseArrest (MHA-C2 mode)"
+          echo "Bundle ID: com.apple.mobile.MobileHouseArrest"
+          echo "iOS Target: 14.0+"
+          echo "========================================="
+        name: "Build Info"
